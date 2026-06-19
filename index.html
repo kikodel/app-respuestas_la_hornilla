@@ -592,17 +592,17 @@ async function generarCustom() {
       "4. Maximo 5 lineas\n\n" +
       "Devuelve SOLO las 3 respuestas separadas por ---SEPARADOR--- sin texto adicional.";
 
-    const raw = await window.cowork.askClaude(prompt, []);
-    console.log('[La Hornilla] askClaude raw result:', raw, typeof raw);
-    // askClaude puede devolver string u objeto con .content / .text
-    let result;
-    if (typeof raw === 'string') {
-      result = raw;
-    } else if (raw && typeof raw === 'object') {
-      result = raw.content || raw.text || raw.response || raw.message || JSON.stringify(raw);
-    } else {
-      throw new Error('Respuesta inesperada: ' + JSON.stringify(raw));
+    const apiResp = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+    if (!apiResp.ok) {
+      const errData = await apiResp.json().catch(() => ({}));
+      throw new Error(errData.error || 'Error HTTP ' + apiResp.status);
     }
+    const apiData = await apiResp.json();
+    const result = apiData.text || '';
     const partes = result.split('---SEPARADOR---').map(s => s.trim()).filter(Boolean);
 
     if (partes.length === 0) throw new Error('Respuesta vacía del modelo');
@@ -684,3 +684,4 @@ initConvos();
 </script>
 </body>
 </html>
+                                                                                      
