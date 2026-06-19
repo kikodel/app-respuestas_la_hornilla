@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Hornilla – Respuestas para clientes</title>
+<style>
+  :root {
+    color-scheme: light;
+    --verde: #2d6a4f;
+    --verde-claro: #40916c;
+    --verde-fondo: #d8f3dc;
+    --tierra: #a07040;
+    --tierra-claro: #f5e6d3;
+    --gris: #f5f5f2;
+    --gris-borde: #e0ddd8;
+    --texto: #1a1a1a;
+    --texto-suave: #666;
+    --blanco: #ffffff;
+    --sombra: 0 2px 8px rgba(0,0,0,0.08);
+    --rojo-suave: #fff0f0;
+    --rojo: #c0392b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--gris);
+    color: var(--texto);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--verde);
+    color: white;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 34px; height: 34px;
+    background: var(--tierra);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+  }
+
+  header h1 { font-size: 17px; font-weight: 700; }
+  header p { font-size: 11px; opacity: 0.8; margin-top: 1px; }
+
+  .tabs {
+    display: flex;
+    background: #1e4d38;
+    padding: 0 24px;
+    gap: 4px;
+  }
+
+  .tab-btn {
+    padding: 10px 16px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .tab-btn:hover { color: rgba(255,255,255,0.9); }
+  .tab-btn.active { color: white; border-bottom-color: #74c69d; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: flex; height: calc(100vh - 100px); }
+
+  /* ========== TAB 1: RESPUESTAS ========== */
+  .sidebar {
+    width: 250px;
+    background: white;
+    border-right: 1px solid var(--gris-borde);
+    overflow-y: auto;
+    padding: 14px 0;
+    flex-shrink: 0;
+  }
+
+  .sidebar-title {
+    font-size: 10px; font-weight: 700;
+    color: var(--texto-suave);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 0 14px 8px;
+  }
+
+  .faq-btn {
+    display: block; width: 100%; text-align: left;
+    padding: 9px 14px;
+    background: none; border: none;
+    border-left: 3px solid transparent;
+    cursor: pointer; font-size: 13px; color: var(--texto);
+    line-height: 1.4; transition: all 0.15s;
+  }
+
+  .faq-btn:hover { background: var(--gris); }
+  .faq-btn.active {
+    background: var(--verde-fondo);
+    border-left-color: var(--verde);
+    color: var(--verde); font-weight: 600;
+  }
+
+  .sidebar-divider { height: 1px; background: var(--gris-borde); margin: 10px 14px; }
+
+  .main {
+    flex: 1; padding: 20px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+
+  .custom-input-section {
+    background: white;
+    border: 1px solid var(--gris-borde);
+    border-radius: 12px; padding: 18px;
+    box-shadow: var(--sombra);
+  }
+
+  .custom-input-section h2 {
+    font-size: 13px; font-weight: 600;
+    color: var(--texto-suave); margin-bottom: 10px;
+  }
+
+  .input-row { display: flex; gap: 8px; }
+
+  .input-row input {
+    flex: 1; padding: 9px 13px;
+    border: 1.5px solid var(--gris-borde);
+    border-radius: 8px; font-size: 13px;
+    outline: none; transition: border-color 0.15s;
+  }
+
+  .input-row input:focus { border-color: var(--verde-claro); }
+
+  .btn-generar {
+    padding: 9px 16px;
+    background: var(--verde); color: white;
+    border: none; border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+    transition: background 0.15s;
+  }
+
+  .btn-generar:hover { background: var(--verde-claro); }
+  .btn-generar:disabled { background: #ccc; cursor: not-allowed; }
+
+  .responses-header {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  }
+
+  .responses-header h2 { font-size: 15px; font-weight: 700; }
+
+  .question-badge {
+    background: var(--verde-fondo); color: var(--verde);
+    border-radius: 20px; padding: 2px 10px;
+    font-size: 12px; font-weight: 500;
+  }
+
+  .response-card {
+    background: white;
+    border: 1px solid var(--gris-borde);
+    border-radius: 12px; padding: 16px 18px;
+    margin-bottom: 10px; box-shadow: var(--sombra);
+    transition: border-color 0.15s;
+  }
+
+  .response-card:hover { border-color: var(--verde-claro); }
+
+  .response-card-header {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 10px;
+  }
+
+  .response-num {
+    font-size: 10px; font-weight: 700; color: var(--verde);
+    background: var(--verde-fondo); border-radius: 4px;
+    padding: 2px 7px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+
+  .real-badge {
+    font-size: 10px; font-weight: 600; color: var(--tierra);
+    background: var(--tierra-claro); border-radius: 4px;
+    padding: 2px 7px;
+  }
+
+  .btn-copiar {
+    padding: 4px 11px;
+    background: var(--gris); border: 1px solid var(--gris-borde);
+    border-radius: 6px; font-size: 12px; cursor: pointer;
+    color: var(--texto-suave); font-weight: 500;
+    transition: all 0.15s; display: flex; align-items: center; gap: 4px;
+  }
+
+  .btn-copiar:hover { background: var(--verde-fondo); border-color: var(--verde-claro); color: var(--verde); }
+  .btn-copiar.copiado { background: var(--verde-fondo); border-color: var(--verde); color: var(--verde); }
+
+  .response-text { font-size: 13px; line-height: 1.65; color: var(--texto); white-space: pre-wrap; }
+
+  .loading {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--texto-suave); font-size: 14px; padding: 20px;
+  }
+
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid var(--gris-borde);
+    border-top-color: var(--verde);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty-state {
+    text-align: center; padding: 40px 20px;
+    color: var(--texto-suave); font-size: 14px;
+  }
+
+  .empty-state .icon { font-size: 34px; margin-bottom: 10px; }
+
+  /* Info pills en sidebar */
+  .pill {
+    display: block;
+    background: var(--tierra-claro); color: var(--tierra);
+    border-radius: 6px; padding: 4px 10px;
+    font-size: 11px; font-weight: 600; margin-bottom: 5px;
+  }
+
+  /* ========== TAB 2: CONVERSACIONES ========== */
+  .convo-layout {
+    display: flex; flex: 1; overflow: hidden;
+  }
+
+  .convo-list {
+    width: 220px; background: white;
+    border-right: 1px solid var(--gris-borde);
+    overflow-y: auto; padding: 10px 0;
+    flex-shrink: 0;
+  }
+
+  .convo-item {
+    display: block; width: 100%; text-align: left;
+    padding: 10px 14px; background: none; border: none;
+    border-left: 3px solid transparent;
+    cursor: pointer; transition: all 0.15s;
+  }
+
+  .convo-item:hover { background: var(--gris); }
+  .convo-item.active { background: var(--verde-fondo); border-left-color: var(--verde); }
+
+  .convo-name { font-size: 13px; font-weight: 600; color: var(--texto); }
+  .convo-preview { font-size: 11px; color: var(--texto-suave); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .convo-item.active .convo-name { color: var(--verde); }
+
+  .convo-main {
+    flex: 1; overflow-y: auto; padding: 20px;
+    background: var(--gris);
+  }
+
+  .convo-title {
+    font-size: 15px; font-weight: 700; margin-bottom: 16px;
+    color: var(--texto);
+  }
+
+  .msg-bubble {
+    max-width: 75%; margin-bottom: 10px;
+    display: flex; flex-direction: column;
+  }
+
+  .msg-bubble.hornilla { align-self: flex-end; align-items: flex-end; margin-left: auto; }
+  .msg-bubble.cliente { align-self: flex-start; align-items: flex-start; }
+
+  .msg-sender {
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    margin-bottom: 3px;
+  }
+
+  .msg-bubble.hornilla .msg-sender { color: var(--verde); }
+  .msg-bubble.cliente .msg-sender { color: var(--tierra); }
+
+  .msg-text {
+    padding: 10px 14px; border-radius: 12px;
+    font-size: 13px; line-height: 1.55;
+    word-break: break-word;
+  }
+
+  .msg-bubble.hornilla .msg-text {
+    background: var(--verde); color: white;
+    border-bottom-right-radius: 3px;
+  }
+
+  .msg-bubble.cliente .msg-text {
+    background: white; color: var(--texto);
+    border: 1px solid var(--gris-borde);
+    border-bottom-left-radius: 3px;
+  }
+
+  .msg-time { font-size: 10px; color: var(--texto-suave); margin-top: 3px; }
+
+  .convo-messages { display: flex; flex-direction: column; gap: 4px; }
+
+  .convo-empty {
+    text-align: center; padding: 60px 20px;
+    color: var(--texto-suave); font-size: 14px;
+  }
+
+  .insight-bar {
+    background: white; border: 1px solid var(--gris-borde);
+    border-radius: 10px; padding: 14px 18px;
+    margin-bottom: 16px; display: flex; gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .insight-item { display: flex; flex-direction: column; gap: 2px; }
+  .insight-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--texto-suave); }
+  .insight-value { font-size: 18px; font-weight: 700; color: var(--verde); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-icon">🌿</div>
+  <div>
+    <h1>La Hornilla</h1>
+    <p>Centro de respuestas para clientes</p>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('respuestas', this)">💬 Respuestas</button>
+  <button class="tab-btn" onclick="switchTab('conversaciones', this)">📋 Conversaciones reales</button>
+</div>
+
+<!-- ============ TAB 1: RESPUESTAS ============ -->
+<div id="tab-respuestas" class="tab-content active">
+
+  <aside class="sidebar">
+    <div class="sidebar-title">Preguntas frecuentes</div>
+    <button class="faq-btn" data-id="info">💬 Hola, quiero más información</button>
+    <button class="faq-btn" data-id="precio">💵 ¿Cuál es el precio?</button>
+    <button class="faq-btn" data-id="donde">📍 ¿Dónde queda?</button>
+    <button class="faq-btn" data-id="financiacion">🏦 ¿Tienen financiación?</button>
+    <button class="faq-btn" data-id="visita">🗓️ Quiero coordinar una visita</button>
+    <button class="faq-btn" data-id="objecion">⚠️ "Es mucho para mí"</button>
+    <button class="faq-btn" data-id="seguimiento">🔄 Sin respuesta / Seguimiento</button>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-title">Datos del proyecto</div>
+    <div style="padding: 0 12px 12px;">
+      <span class="pill">💰 Desde USD 20.000</span>
+      <span class="pill">📐 Hasta 1.000 m²</span>
+      <span class="pill">📍 Alta Gracia – 5 min de todo</span>
+      <span class="pill">📄 Escritura inmediata</span>
+      <span class="pill">💲 Financiación fija en USD</span>
+      <span class="pill">👨‍👩‍👧 +60 familias viviendo</span>
+      <span class="pill">📞 351 685-6555</span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="custom-input-section">
+      <h2>✍️ Escribí cualquier pregunta para generar una respuesta</h2>
+      <div class="input-row">
+        <input type="text" id="customInput"
+          placeholder="Ej: ¿Hay gas natural? ¿Puedo construir de inmediato?"
+          onkeydown="if(event.key==='Enter') generarCustom()" />
+        <button class="btn-generar" id="btnGenerar" onclick="generarCustom()">Generar ✨</button>
+      </div>
+    </div>
+
+    <div id="responsesArea">
+      <div class="empty-state">
+        <div class="icon">💬</div>
+        <div>Seleccioná una pregunta del panel izquierdo<br>o escribí una consulta personalizada arriba.</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ TAB 2: CONVERSACIONES REALES ============ -->
+<div id="tab-conversaciones" class="tab-content">
+  <div class="convo-list" id="convoList"></div>
+  <div class="convo-main" id="convoMain">
+    <div class="convo-empty">
+      <div style="font-size:32px;margin-bottom:10px;">📨</div>
+      <div>Seleccioná una conversación para verla</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ DATOS FAQ ============
+const FAQ_DATA = {
+  info: {
+    pregunta: "Hola, quiero más información",
+    respuestas: [
+      { text: `¡Hola! 😊 Gracias por tu interés en La Hornilla.\n\nSe trata de un barrio en Alta Gracia, con lotes desde 1.000 m², escritura inmediata, servicios y más de 60 familias viviendo actualmente.\n\n¿Nos compartís un número de WhatsApp? 📲 Así te enviamos toda la información, disponibilidad y opciones de financiación.`, tipo: "template" },
+      { text: `¡Hola! 👋 Gracias por escribirnos.\n\nLa Hornilla es un barrio consolidado en Alta Gracia, rodeado de naturaleza y a solo minutos del centro. Lotes desde 1.000 m², escritura inmediata y financiación propia.\n\n¿Te parece si te enviamos toda la info por WhatsApp? 😊`, tipo: "template" },
+      { text: `¡Hola! 😊 ¿Cómo estás?\n\nTenemos lotes disponibles en La Hornilla, un barrio en Alta Gracia con escritura inmediata y financiación propia en dólares.\n\n¿Nos dejás tu WhatsApp? También podemos coordinar una visita para que conozcas el lugar.`, tipo: "template" }
+    ]
+  },
+  precio: {
+    pregunta: "¿Cuál es el precio?",
+    respuestas: [
+      { text: `¡Hola! 😊 Los lotes tienen valores desde USD 20.000. El precio final depende de la ubicación y superficie de cada lote.\n\n¿Nos compartís un teléfono? 📲 Así te enviamos las opciones disponibles, precios actualizados y planes de financiación.`, tipo: "template" },
+      { text: `¡Hola! 👋 Contamos con lotes desde USD 20.000 y financiación propia: entrega inicial + cuotas fijas en dólares.\n\n¿Te enviamos todo detallado por WhatsApp?`, tipo: "template" },
+      { text: `Buenas tardes! Los lotes varían de acuerdo al tamaño y ubicación, desde USD 20.000. Tenemos financiación hasta en 24 cuotas fijas en dólares, partiendo de una entrega inicial.\n\nPor más dudas podes escribirnos al 3516856555 y te enviamos todo. Saludos`, tipo: "real" }
+    ]
+  },
+  donde: {
+    pregunta: "¿Dónde queda?",
+    respuestas: [
+      { text: `¡Hola! 😊 La Hornilla se encuentra en Alta Gracia, a solo 5 minutos del centro y a 45 minutos de Córdoba Capital.\n\nEs un barrio consolidado con más de 60 familias viviendo actualmente, rodeado de naturaleza.\n\nSi nos compartís un número, te enviamos la ubicación exacta y toda la info del proyecto. 📲`, tipo: "template" },
+      { text: `¡Hola! 👋 Estamos en Alta Gracia, camino a las sierras y a tan solo 5 minutos de todo: comercios, colegios, hospital.\n\nAcá te mandamos la ubicación 📍 https://maps.app.goo.gl/pTEo61ZAuc87zU826\n\n¿Querés que coordinemos una visita?`, tipo: "real" }
+    ]
+  },
+  financiacion: {
+    pregunta: "¿Tienen financiación?",
+    respuestas: [
+      { text: `¡Hola! 👋 Sí, contamos con financiación propia: entrega inicial + hasta 24 cuotas fijas en dólares.\n\nLas condiciones varían según el lote disponible.\n\n¿Nos dejás un teléfono? 😊 Así te enviamos todas las opciones vigentes.`, tipo: "template" },
+      { text: `¡Sí! 😊 Tenemos financiación directa sin banco. La modalidad es entrega inicial + cuotas fijas en USD.\n\nEs una de las grandes ventajas de La Hornilla: planificás tu inversión sin sorpresas.\n\n¿Te compartimos los planes por WhatsApp? 📲`, tipo: "template" }
+    ]
+  },
+  visita: {
+    pregunta: "Quiero coordinar una visita",
+    respuestas: [
+      { text: `¡Excelente! 😊 Nos encantará recibirte en La Hornilla.\n\nComunicate al 3516856555 y ahí podés arreglar día, horario y demás. ¡Esperamos tu mensaje!`, tipo: "real" },
+      { text: `¡Genial! 🙌 Te esperamos con mucho gusto. La Hornilla queda en Alta Gracia, a solo 5 minutos del centro.\n\nDejanos tu número y coordinamos una visita sin compromiso para que conozcas el lugar y los lotes disponibles. 🌿`, tipo: "template" }
+    ]
+  },
+  objecion: {
+    pregunta: '"Es mucho para mí" / Objeción de precio',
+    respuestas: [
+      { text: `Gracias por tu respuesta! Si tenés alguna consulta específica sobre el precio, o de cuánto puede ser la entrega inicial y la financiación, podés comunicarte directamente con el área comercial al 3516856555. Gustavo va a poder explicarte las diferentes opciones. Saludos 😊`, tipo: "real" },
+      { text: `¡Entendemos! 😊 Por eso tenemos financiación propia con cuotas fijas en dólares, lo que hace que la entrada sea mucho más accesible.\n\nSi querés, te contamos las opciones sin compromiso. ¿Cuál sería tu presupuesto aproximado para la entrega inicial?`, tipo: "template" },
+      { text: `Gracias por ser sincero/a! 🙏 Tenemos diferentes opciones según el lote y las condiciones de financiación.\n\nAntes de descartar, ¿te parece si hablamos 5 minutos con Gustavo? A veces hay alternativas que se adaptan mejor. 📲 3516856555`, tipo: "template" }
+    ]
+  },
+  seguimiento: {
+    pregunta: "Sin respuesta / Seguimiento",
+    respuestas: [
+      { text: `Buenos días! Te escribía para saber si habías podido comunicarte con Gustavo, o si no, para poder coordinar una visita. Saludos 😊`, tipo: "real" },
+      { text: `¡Hola! Quería saber si pudiste ver la información que te enviamos sobre La Hornilla.\n\nEstamos disponibles para cualquier consulta o para coordinar una visita cuando quieras. 🌿`, tipo: "template" },
+      { text: `¡Buenos días! 😊 Te escribimos porque quedamos pendientes de ponernos en contacto.\n\nSi todavía te interesa conocer más sobre los lotes, con gusto te contamos todo. ¿Tenés un momento esta semana?`, tipo: "template" }
+    ]
+  }
+};
+
+// ============ CONVERSACIONES REALES ============
+const CONVOS = [
+  {
+    name: "Fede Alejandro",
+    messages: [
+      { sender: "cliente", text: "Hola info de precios de lotes", time: "ene. 21, 2026 9:22 pm" },
+      { sender: "hornilla", text: "¡Hola! Gracias por ponerte en contacto con nosotros. Recibimos tu mensaje y agradecemos tu interés.", time: "ene. 21, 2026 9:22 pm" },
+      { sender: "hornilla", text: "Buenas tardes Federico, el precio de los lotes varía de acuerdo al tamaño y ubicación pero rondan los 25000 dólares. Tenemos financiación hasta en 24 cuotas fijas en dólares, partiendo de una entrega inicial. Por más dudas o consultas específicas podes escribirnos al 3516856555 y te enviamos todo. Saludos", time: "feb. 25, 2026 11:16 am" }
+    ]
+  },
+  {
+    name: "Felipe Machado",
+    messages: [
+      { sender: "hornilla", text: "Buenas tardes! Si pudieras dejarnos un número de WhatsApp para poder contactarnos y enviarte toda la información detallada, también podes comunicarte vos al 3516856555! Saludos!", time: "feb. 25, 2026 11:16 am" },
+      { sender: "cliente", text: "Perdón, recién veo esto. Pueden escribirme al 3513214427", time: "mar. 29, 2026 9:35 pm" },
+      { sender: "hornilla", text: "¡Hola! Gracias por ponerte en contacto con nosotros. Recibimos tu mensaje y agradecemos tu interés.", time: "mar. 29, 2026 9:35 pm" },
+      { sender: "hornilla", text: "Buenos días Felipe! A la brevedad Gustavo se va a estar comunicando con vos!", time: "abr. 06, 2026 12:47 pm" },
+      { sender: "hornilla", text: "Buenos días Felipe, quería saber si te habías podido comunicar con Gustavo.", time: "may. 13, 2026 11:12 am" }
+    ]
+  },
+  {
+    name: "Fernando Capoferri",
+    messages: [
+      { sender: "hornilla", text: "Buenas tardes Fernando, intentamos comunicarnos por WhatsApp pero no nos lo permitió. Te enviamos un mensaje y un mail pero no logramos el contacto. Si querés podes escribirnos directamente a nuestro teléfono 3516856555 y te enviamos toda la información que necesites. Muchas gracias y disculpa las molestias.", time: "feb. 21, 2026 9:01 pm" },
+      { sender: "cliente", text: "351 5448191", time: "feb. 22, 2026 4:26 pm" },
+      { sender: "hornilla", text: "¡Hola! Gracias por ponerte en contacto con nosotros. Recibimos tu mensaje y agradecemos tu interés.", time: "feb. 22, 2026 4:26 pm" }
+    ]
+  },
+  {
+    name: "Liliana Niz",
+    messages: [
+      { sender: "hornilla", text: "Somos La Hornilla 🏡 Un barrio pensado para quienes quieren vivir rodeados de naturaleza, pero cerca de todo.\n\n🖋️ Dueño directo, trabajamos SIN comisión inmobiliaria.\n📍 Alta Gracia — a 3 min del centro y 45 min de Córdoba.\n✔️ Lotes desde 1000 m²\n✔️ Escritura inmediata\n✔️ Barrio perimetralmente cerrado\n✔️ +60 familias viviendo\n✔️ Agua de red y luz subterránea\n➡️ Desde U$D 25.000\n➡️ Financiación: entrega inicial + 24 cuotas fijas en USD\n\n📲 +54 9 3516856555", time: "may. 31, 2026 7:01 pm" },
+      { sender: "cliente", text: "No gracias, es mucho para mí", time: "may. 31, 2026 7:04 pm" },
+      { sender: "hornilla", text: "Bueno Liliana, muchas gracias por tu respuesta. Si tenés alguna consulta específica sobre el precio o de cuánto puede ser la entrega inicial y la financiación, podés comunicarte directamente con el área comercial al 3516856555. Gustavo va a poder explicarte diferentes opciones. Saludos.", time: "jun. 01, 2026 6:09 pm" }
+    ]
+  },
+  {
+    name: "Stel Lita",
+    messages: [
+      { sender: "cliente", text: "Buenas tardes. Me interesa tu publicación", time: "feb. 23, 2026 7:28 pm" },
+      { sender: "hornilla", text: "¡Hola! Gracias por ponerte en contacto con nosotros. Recibimos tu mensaje y agradecemos tu interés.", time: "feb. 23, 2026 7:28 pm" },
+      { sender: "hornilla", text: "Contanos qué necesitas", time: "feb. 23, 2026 8:43 pm" },
+      { sender: "cliente", text: "Me gustaría conocerlos. ¿Me enviás ubicación?", time: "feb. 23, 2026 9:49 pm" },
+      { sender: "hornilla", text: "Buenos días, sí por supuesto 📍 https://maps.app.goo.gl/JCwxDq3XnMqQiswm8", time: "feb. 25, 2026 11:12 am" },
+      { sender: "hornilla", text: "Si necesitas información específica o tenés dudas para coordinar una visita, podés comunicarte con nosotros al 3516856555! Saludos", time: "feb. 25, 2026 11:13 am" },
+      { sender: "cliente", text: "¿Cómo puedo coordinar una visita?", time: "feb. 25, 2026 3:02 pm" },
+      { sender: "hornilla", text: "Comunicate al 3516856555 y ahí podés arreglar días, horarios y demás! ¡Esperamos tu mensaje!", time: "feb. 25, 2026 7:05 pm" },
+      { sender: "hornilla", text: "Buenos días Stella! Te escribía para saber si habías podido comunicarte con Gustavo para coordinar una visita. Saludos", time: "may. 14, 2026 9:50 am" }
+    ]
+  }
+];
+
+// ============ LÓGICA TAB ============
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ============ LÓGICA FAQ ============
+document.querySelectorAll('.faq-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.faq-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    mostrarRespuestasPrecargadas(btn.dataset.id);
+  });
+});
+
+function mostrarRespuestasPrecargadas(id) {
+  const data = FAQ_DATA[id];
+  if (!data) return;
+  renderRespuestas(data.pregunta, data.respuestas);
+}
+
+// Almacén global de textos para evitar problemas con caracteres especiales en onclick
+window._respTextos = [];
+
+function renderRespuestas(pregunta, respuestas) {
+  const area = document.getElementById('responsesArea');
+  window._respTextos = [];
+
+  const cardsHtml = respuestas.map((r, i) => {
+    const isReal = r.tipo === 'real';
+    const texto = typeof r === 'string' ? r : r.text;
+    window._respTextos.push(texto);
+    const textoHtml = texto.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return `
+      <div class="response-card">
+        <div class="response-card-header">
+          <div style="display:flex;gap:6px;align-items:center">
+            <span class="response-num">Opción ${i + 1}</span>
+            ${isReal ? '<span class="real-badge">✓ Usada en la vida real</span>' : ''}
+          </div>
+          <button class="btn-copiar" data-idx="${i}" onclick="copiarIdx(this)">📋 Copiar</button>
+        </div>
+        <div class="response-text">${textoHtml}</div>
+      </div>`;
+  }).join('');
+
+  area.innerHTML = `
+    <div class="responses-header">
+      <h2>Opciones de respuesta</h2>
+      <span class="question-badge">📩 "${pregunta}"</span>
+    </div>
+    ${cardsHtml}
+  `;
+}
+
+async function generarCustom() {
+  const input = document.getElementById('customInput');
+  const btn = document.getElementById('btnGenerar');
+  const pregunta = input.value.trim();
+  if (!pregunta) return;
+
+  document.querySelectorAll('.faq-btn').forEach(b => b.classList.remove('active'));
+
+  const area = document.getElementById('responsesArea');
+  area.innerHTML = `<div class="loading"><div class="spinner"></div> Generando respuestas para: <em>"${pregunta}"</em></div>`;
+  btn.disabled = true;
+
+  try {
+    const prompt = "Sos el equipo de ventas de La Hornilla, un emprendimiento de lotes en Córdoba, Argentina, camino a Alta Gracia.\n\n" +
+      "Info clave:\n" +
+      "- Lotes desde USD 20.000 hasta 1.000 m2\n" +
+      "- Alta Gracia: 5 min del centro, 45 min de Córdoba Capital\n" +
+      "- Escritura INMEDIATA\n" +
+      "- Financiacion propia: entrega inicial + 24 cuotas fijas en USD (sin banco)\n" +
+      "- Barrio consolidado con +60 familias. Sin comision inmobiliaria.\n" +
+      "- Telefono comercial: 3516856555 (Gustavo)\n\n" +
+      "Un potencial cliente pregunto: " + pregunta + "\n\n" +
+      "Genera 3 respuestas cortas y calidas para responder por WhatsApp, en argentino informal. Cada una debe:\n" +
+      "1. Responder directamente la pregunta\n" +
+      "2. Usar emojis con moderacion\n" +
+      "3. Terminar invitando a dejar su WhatsApp o coordinar visita\n" +
+      "4. Maximo 5 lineas\n\n" +
+      "Devuelve SOLO las 3 respuestas separadas por ---SEPARADOR--- sin texto adicional.";
+
+    const apiResp = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+    if (!apiResp.ok) {
+      const errData = await apiResp.json().catch(() => ({}));
+      throw new Error(errData.error || 'Error HTTP ' + apiResp.status);
+    }
+    const apiData = await apiResp.json();
+    const result = apiData.text || '';
+    const partes = result.split('---SEPARADOR---').map(s => s.trim()).filter(Boolean);
+
+    if (partes.length === 0) throw new Error('Respuesta vacía del modelo');
+    renderRespuestas(pregunta, partes.map(t => ({ text: t, tipo: 'ai' })));
+    input.value = '';
+  } catch (e) {
+    const msg = e && e.message ? e.message : String(e);
+    area.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><div>Error: ${msg}<br><br><small>Intentá de nuevo o seleccioná una pregunta del panel.</small></div></div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function copiarIdx(btn) {
+  const idx = parseInt(btn.dataset.idx, 10);
+  const texto = window._respTextos[idx] || '';
+  navigator.clipboard.writeText(texto).then(() => {
+    btn.textContent = '✅ Copiado';
+    btn.classList.add('copiado');
+    setTimeout(() => { btn.innerHTML = '📋 Copiar'; btn.classList.remove('copiado'); }, 2000);
+  }).catch(() => {
+    // Fallback para navegadores sin clipboard API
+    const ta = document.createElement('textarea');
+    ta.value = texto;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✅ Copiado';
+    btn.classList.add('copiado');
+    setTimeout(() => { btn.innerHTML = '📋 Copiar'; btn.classList.remove('copiado'); }, 2000);
+  });
+}
+
+// ============ LÓGICA CONVERSACIONES ============
+function initConvos() {
+  const list = document.getElementById('convoList');
+
+  // Stats bar
+  const totalMsgs = CONVOS.reduce((s, c) => s + c.messages.length, 0);
+  const clienteMsgs = CONVOS.reduce((s, c) => s + c.messages.filter(m => m.sender === 'cliente').length, 0);
+
+  CONVOS.forEach((c, i) => {
+    const lastMsg = c.messages[c.messages.length - 1];
+    const preview = lastMsg ? lastMsg.text.slice(0, 40) + '…' : '';
+    const btn = document.createElement('button');
+    btn.className = 'convo-item';
+    btn.innerHTML = `<div class="convo-name">${c.name}</div><div class="convo-preview">${preview}</div>`;
+    btn.onclick = () => {
+      document.querySelectorAll('.convo-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      showConvo(i);
+    };
+    list.appendChild(btn);
+  });
+}
+
+function showConvo(idx) {
+  const c = CONVOS[idx];
+  const main = document.getElementById('convoMain');
+
+  const msgsHtml = c.messages.map(m => {
+    const isHornilla = m.sender === 'hornilla';
+    return `
+      <div class="msg-bubble ${isHornilla ? 'hornilla' : 'cliente'}">
+        <div class="msg-sender">${isHornilla ? '🌿 La Hornilla' : '👤 ' + c.name}</div>
+        <div class="msg-text">${m.text.replace(/\n/g, '<br>')}</div>
+        <div class="msg-time">${m.time}</div>
+      </div>`;
+  }).join('');
+
+  main.innerHTML = `
+    <div class="convo-title">Conversación con ${c.name} <span style="color:var(--texto-suave);font-size:13px;font-weight:400;">(${c.messages.length} mensajes)</span></div>
+    <div class="convo-messages">${msgsHtml}</div>
+  `;
+}
+
+initConvos();
+</script>
+</body>
+</html>
